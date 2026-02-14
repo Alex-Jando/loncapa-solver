@@ -1,99 +1,94 @@
-# LON-CAPA PDF Extractor (Next.js)
+# LON-CAPA Assignment Extractor + Solver (Next.js)
 
-This project is a Next.js (App Router + TypeScript) web app that:
+This is a Next.js (App Router + TypeScript) app that:
 
-- uploads a LON-CAPA exported assignment PDF
-- extracts text server-side (in memory)
-- splits content into problem blocks by problem ID headers
-- extracts numeric values + units + context per problem
-- displays results and supports JSON download
+- uploads a LON-CAPA exported PDF
+- extracts problem blocks and numeric values with units/context
+- runs a single `Solve All` flow for:
+  - Assignment 1 (`q1`..`q9`)
+  - Assignment 2 (`q1`..`q11`)
+  - Assignment 3 (`q1`..`q11`)
+  - Assignment 4 (`q1`..`q9`)
+  - Assignment 5 (`q1`..`q12`)
+  - Assignment 6 (`q1`..`q14`)
+  - Assignment 7 (`q1`..`q10`)
+  - Assignment 8 (`q1`..`q9`)
+  - Assignment 9 (`q1`..`q10`)
+  - Assignment 10 (`q1`..`q9`)
 
-No credentials, no solving, local parsing on server per request, nothing stored.
+Everything runs in Next.js only. No Python, no process spawning, no login/scraping/submission.
 
-## Tech Stack
-
-- Next.js (App Router)
-- TypeScript
-- `pdf-parse` for PDF text extraction
-
-## Project Structure
-
-- `app/page.tsx`: upload UI, parse trigger, result rendering, JSON download
-- `app/api/parse/route.ts`: multipart upload API route and PDF parsing entrypoint
-- `lib/parseLonCapaPdf.ts`: core parser logic (normalize text, split blocks, extract values)
-- `lib/types.ts`: output JSON types
-
-## Install and Run
+## Install and run
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open:
+Open `http://localhost:3000`.
 
-```text
-http://localhost:3000
-```
+## Main flow
 
-## Usage
+1. Upload a PDF and click `Parse PDF`.
+2. Confirm/select solver assignment (`1`..`10`).
+3. Click `Solve All`.
+4. Review the all-answers table / JSON.
+5. Use `Copy All Answers` or `Download All Answers JSON`.
 
-1. Upload a `.pdf` file.
-2. Click `Parse PDF`.
-3. Inspect assignment metadata and per-problem extracted values.
-4. Click `Download JSON` to save structured output.
+## API routes
 
-## API
+### `POST /api/parse`
 
-`POST /api/parse` with `multipart/form-data`:
+- Content type: `multipart/form-data`
+- Field: `file`
+- Returns extracted assignment metadata and problems.
 
-- field name: `file`
-- accepts: PDF only
+### `POST /api/solve-all`
 
-Response shape:
+- Content type: `application/json`
+- Body:
 
 ```json
 {
-  "assignmentMetadata": {
-    "title": "Assignment 5",
-    "assignmentNumber": 5
-  },
-  "problems": [
-    {
-      "problemId": "kn-prob2838.problem",
-      "rawText": "...",
-      "extractedValues": [
-        {
-          "raw": "0.952mm",
-          "value": 0.952,
-          "unit": "mm",
-          "context": "...",
-          "position": 123
-        }
-      ]
-    }
-  ]
+  "assignmentNumber": 1,
+  "problems": [/* parsed problems from /api/parse */]
 }
 ```
 
-## Parsing Notes
+- Response:
+  - `{ "ok": true, "answers": { ... } }`
+  - Each question entry contains either solved `results` + `inputsUsed` or an error with missing inputs.
 
-- Problem split regex (line-based, case-insensitive):
-  - `^[a-z]{2}-prob[0-9]+[a-z]?\.problem$`
-- Numeric parser supports:
-  - decimals (e.g. `91.7`, `0.952`)
-  - scientific notation (e.g. `7.00E-9`, `7.90E+28`)
-- Unit normalization examples:
-  - `uA` -> `µA`
-  - `ohm`, `ohms` -> `Ω`
-  - `ohm m`, `ohm.m`, `ohm·m` -> `Ω·m`
-  - `A hr` -> `A·hr`
+## Project structure
 
-## Error Handling
+- `app/page.tsx`: PDF parse UI + solve-all output UI
+- `app/api/parse/route.ts`: in-memory PDF parsing route
+- `app/api/solve-all/route.ts`: solve-all route for assignments 1..10
+- `lib/assignment1/solvers.ts`: pure TypeScript solver functions for Assignment 1
+- `lib/assignment1/index.ts`: Assignment 1 solve-all matcher/runner
+- `lib/assignment2/solvers.ts`: pure TypeScript solver functions for Assignment 2
+- `lib/assignment2/index.ts`: Assignment 2 solve-all matcher/runner
+- `lib/assignment3/solvers.ts`: pure TypeScript solver functions for Assignment 3
+- `lib/assignment3/index.ts`: Assignment 3 solve-all matcher/runner
+- `lib/assignment4/solvers.ts`: pure TypeScript solver functions for Assignment 4
+- `lib/assignment4/index.ts`: Assignment 4 solve-all matcher/runner
+- `lib/parseLonCapaPdf.ts`: text normalization, block splitting, value extraction
+- `lib/assignment5/solvers.ts`: pure TypeScript solver functions for Assignment 5
+- `lib/assignment5/index.ts`: Assignment 5 solve-all matcher/runner
+- `lib/assignment6/solvers.ts`: pure TypeScript solver functions for Assignment 6
+- `lib/assignment6/index.ts`: Assignment 6 solve-all runner
+- `lib/assignment7/solvers.ts`: pure TypeScript solver functions for Assignment 7
+- `lib/assignment7/index.ts`: Assignment 7 solve-all runner
+- `lib/assignment8/solvers.ts`: pure TypeScript solver functions for Assignment 8
+- `lib/assignment8/index.ts`: Assignment 8 solve-all runner
+- `lib/assignment9/solvers.ts`: pure TypeScript solver functions for Assignment 9
+- `lib/assignment9/index.ts`: Assignment 9 solve-all runner
+- `lib/assignment10/solvers.ts`: pure TypeScript solver functions for Assignment 10
+- `lib/assignment10/index.ts`: Assignment 10 solve-all runner
 
-- non-PDF upload -> `400`
-- missing file field -> `400`
-- empty file -> `400`
-- PDF extracted text empty -> `422`
-- unexpected parser/server failure -> `500`
+## Security and storage notes
 
+- No LON-CAPA login automation
+- No scraping or submission
+- No persistent PDF storage
+- PDFs are parsed in memory per request
