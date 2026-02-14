@@ -32,7 +32,6 @@ export function solve_q4(
   c_cm: number,
   d_cm: number,
 ): Record<string, number> {
-  console.log(radius_cm, charge_uC, b_cm, c_cm, d_cm);
   const radius_m = radius_cm / 100;
   const q = charge_uC * 1e-6;
   const b = b_cm / 100;

@@ -10,6 +10,8 @@ import { runAssignment8SolveAll } from "@/lib/assignment8";
 import { runAssignment9SolveAll } from "@/lib/assignment9";
 import { runAssignment10SolveAll } from "@/lib/assignment10";
 import type { ParsedProblem } from "@/lib/types";
+import { wrapSolverOutput } from "@/lib/formatSolverOutput";
+import { assignmentOutputUnits } from "@/lib/assignments/outputUnits";
 
 export const runtime = "nodejs";
 
@@ -17,6 +19,15 @@ interface SolveAllBody {
   assignmentNumber?: unknown;
   problems?: unknown;
 }
+
+type SolveAllOkAnswer = {
+  ok: true;
+  problemId: string;
+  inputsUsed: Record<string, number> | number[];
+  results: Record<string, number>;
+};
+
+type SolveAllAnswer = SolveAllOkAnswer | { ok: false; problemId: string | null; error: string; missing?: string[] };
 
 function isParsedProblem(value: unknown): value is ParsedProblem {
   if (!value || typeof value !== "object") {
@@ -71,7 +82,38 @@ export async function POST(request: Request) {
     else if (assignmentNumber === 8) output = runAssignment8SolveAll(problems);
     else if (assignmentNumber === 9) output = runAssignment9SolveAll(problems);
     else output = runAssignment10SolveAll(problems);
-    return NextResponse.json(output);
+
+    const assignmentId = `a${assignmentNumber}`;
+    const answers = output.answers as Record<string, SolveAllAnswer>;
+    const formattedAnswers: Record<string, unknown> = {};
+
+    for (const [questionId, answer] of Object.entries(answers)) {
+      if (!answer.ok) {
+        formattedAnswers[questionId] = answer;
+        continue;
+      }
+
+      const wrapped = wrapSolverOutput(
+        assignmentId,
+        questionId,
+        answer.results,
+        assignmentOutputUnits,
+      );
+
+      formattedAnswers[questionId] = {
+        ...answer,
+        rawResults: answer.results,
+        sigFigsUsed: wrapped.sigFigsUsed,
+        results: wrapped.results,
+        resultsObjectFormatted: wrapped.resultsObjectFormatted,
+      };
+    }
+
+    return NextResponse.json({
+      ...output,
+      assignmentId,
+      answers: formattedAnswers,
+    });
   } catch {
     return NextResponse.json(
       { ok: false, error: "Invalid JSON body. Expected { assignmentNumber, problems }." },

@@ -75,7 +75,6 @@ export function solve_q9(
   const charge2_C = (V_V * EPS * PI * R ** 2) / d_new_m;
   const field2_V_m = charge2_C / (EPS * PI * R ** 2);
   const R2 = new_diameter_m / 2;
-  console.log(diameter_m, d_m, V_V, d_new_m, new_diameter_m)
   const charge3_C = (V_V * EPS * PI * R2 ** 2) / d_m;
   const field3_V_m = charge3_C / (EPS * PI * R2 ** 2);
   return { charge1_C, field1_V_m, voltage_V1: V_V, charge2_C, field2_V_m, voltage_V2: V_V, charge3_C, field3_V_m, voltage_V3: V_V };

@@ -51,8 +51,6 @@ export function solve_q5(
   const d2 = d2_cm / 100;
   const d3 = d3_cm / 100;
 
-  console.log({ r1, q1, r2, q2, d1, d2, d3 })
-
   const b_N_C = KE * (q1 / d2 ** 2);
   const c_N_C = KE * ((q1 - q2) / d3 ** 2);
   const d_V = KE * (q1 / r1 - q2 / r2);

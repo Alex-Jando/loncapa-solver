@@ -1,134 +1,39 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #161616;
-  background: #f4f7fb;
+  --color-bg: 248 250 252;
+  --color-card: 255 255 255;
+  --color-border: 226 232 240;
+  --color-primary: 79 70 229;
+  --color-secondary: 13 148 136;
+  --color-text: 15 23 42;
+  --color-muted: 71 85 105;
+  --color-success: 5 150 105;
+  --color-error: 225 29 72;
+  --color-warning: 245 158 11;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: rgb(var(--color-bg));
+  color: rgb(var(--color-text));
 }
 
 * {
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
+button,
+input,
+select,
+textarea,
+summary {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2;
 }
 
-main {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 2rem 1rem 3rem;
-}
-
-h1 {
-  margin: 0 0 0.4rem;
-}
-
-.subtitle {
-  margin-top: 0;
-  color: #4c5563;
-}
-
-.card {
-  background: #ffffff;
-  border: 1px solid #d9e2ec;
-  border-radius: 0.75rem;
-  padding: 1rem;
-  margin-top: 1rem;
-}
-
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
-}
-
-button {
-  border: 1px solid #1e3a8a;
-  background: #1e40af;
-  color: #fff;
-  border-radius: 0.5rem;
-  padding: 0.55rem 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-input[type="file"] {
-  border: 1px solid #c5cfdb;
-  border-radius: 0.5rem;
-  padding: 0.35rem 0.5rem;
-  background: #fff;
-}
-
-input[type="number"],
-select {
-  width: 100%;
-  border: 1px solid #c5cfdb;
-  border-radius: 0.45rem;
-  padding: 0.4rem 0.5rem;
-  background: #fff;
-}
-
-.error {
-  color: #9f1239;
-}
-
-.problem-title {
-  margin-bottom: 0.35rem;
-}
-
-.row-between {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.field-label {
-  display: inline-block;
-  margin-top: 0.5rem;
-  margin-bottom: 0.3rem;
-  font-weight: 600;
-}
-
-.top-gap {
-  margin-top: 0.8rem;
-}
-
-pre {
-  background: #f7fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
-  padding: 0.65rem;
-  max-height: 180px;
-  overflow: auto;
-  white-space: pre-wrap;
-  font-size: 0.9rem;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 0.6rem;
-  font-size: 0.92rem;
-}
-
-th,
-td {
-  border: 1px solid #dbe3ed;
-  text-align: left;
-  padding: 0.5rem;
-  vertical-align: top;
-}
-
-th {
-  background: #eef4fb;
-}
-
-.mono {
-  font-family: Consolas, Monaco, "Courier New", monospace;
-}
