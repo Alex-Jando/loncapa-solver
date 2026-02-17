@@ -3,7 +3,7 @@ import { ExtractedValue, ParseLonCapaResult, ParsedProblem } from "@/lib/types";
 const PROBLEM_HEADER_REGEX = /^\s*([a-z]{2}-prob\d+[a-z]?\.problem)\s*$/i;
 
 const NUMBER_WITH_UNIT_REGEX =
-  /(?<![0-9_.-])([+-]?(?:\d+(?:\.\d+)?|\.\d+)(?:[Ee][+-]?\d+)?)(\s*)(A\s*hr|electrons\/m3|g\/cm3|rad\/s|m\/s|V\/m|N\/C|nC\/m|C\/m|N\*m2\/C|MeV|(?:\u2126|\u03A9|\u03C9|ohms?|ohm)(?:\s*(?:\u00B7|\.|\s)\s*m)?|\u00B5A|\u03BCA|uA|mA|uC|\u00B5C|\u03BCC|nC|pF|uF|nF|fm|nm|cm2|m2|c|deg(?:ree)?s?|mm|cm|km|kg|A|V|W|C|m|g|s|times)(?=$|[\s,.;:!?)\]\}])/gi;
+  /(?<![0-9_.-])([+-]?(?:\d+(?:\.\d+)?|\.\d+)(?:[Ee][+-]?\d+)?)(\s*)(A\s*hr|electrons\/m3|g\/cm3|rad\/s|m\/s|V\/m|N\/C|nC\/m|C\/m|N\*m2\/C|MeV|k(?:\u2126|\u03A9|\u03C9|ohms?|ohm)|(?:\u2126|\u03A9|\u03C9|ohms?|ohm)(?:\s*(?:\u00B7|\.|\s)\s*m)?|\u00B5A|\u03BCA|uA|mA|uC|\u00B5C|\u03BCC|nC|pF|uF|nF|F|fm|nm|cm2|m2|us|\u00B5s|ms|c|deg(?:ree)?s?|mm|cm|km|kg|A|V|W|C|m|g|s|times)(?=$|[\s,.;:!?)\]\}])/gi;
 
 const ANGLE_ASSIGN_REGEX = /(?:theta|θ|alpha|α)\s*=\s*([+-]?(?:\d+(?:\.\d+)?|\.\d+))/gi;
 const KAPPA_ASSIGN_REGEX =
@@ -15,6 +15,13 @@ function normalizeText(text: string): string {
   return text
     .replace(/\r\n?/g, "\n")
     .replace(/\u00a0/g, " ")
+    .replace(/\u00e2\u0084\u00a6/g, "\u2126")
+    .replace(/\u00c2\u00b0/g, "deg")
+    .replace(/\u00c2\u00b7/g, "\u00B7")
+    .replace(/\u00c2/g, "")
+    .replace(/\u00ef\u00ac\u0080/g, "ff")
+    .replace(/\u00ef\u00ac\u0081/g, "fi")
+    .replace(/\u00e2\u0080\u0099/g, "'")
     .replace(/-\n(?=[a-z])/g, "")
     .replace(/([Ee])\s*([+-])\s*(\d+)/g, "$1$2$3")
     .replace(/([Ee])\s+(\d+)/g, "$1$2")
@@ -88,8 +95,20 @@ function normalizeUnit(unit: string): string {
   if (lower === "ua" || lower === "\u00b5a" || lower === "\u03bca") {
     return "\u00B5A";
   }
+  if (lower === "us" || lower === "\u00b5s") {
+    return "us";
+  }
+  if (lower === "ms") {
+    return "ms";
+  }
   if (lower === "ohm" || lower === "ohms") {
     return "\u2126";
+  }
+  if (lower === "kohm" || lower === "kohms") {
+    return "k\u2126";
+  }
+  if (lower === "k\u03c9" || lower === "k\u03a9") {
+    return "k\u2126";
   }
   if (lower === "uc" || lower === "\u00b5c" || lower === "\u03bcc") {
     return "uC";
@@ -102,6 +121,9 @@ function normalizeUnit(unit: string): string {
   }
   if (lower === "nf") {
     return "nF";
+  }
+  if (lower === "f") {
+    return "F";
   }
   if (lower === "v/m") {
     return "V/m";
@@ -135,6 +157,9 @@ function normalizeUnit(unit: string): string {
   }
   if (compact === "\u03A9" || compact === "\u2126") {
     return "\u2126";
+  }
+  if (compact === "k\u03A9" || compact === "k\u2126" || compact === "k\u03C9") {
+    return "k\u2126";
   }
   if (compact === "\u03A9\u00B7m" || compact === "\u2126\u00B7m") {
     return "\u2126\u00B7m";
