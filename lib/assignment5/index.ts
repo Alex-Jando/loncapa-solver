@@ -1,16 +1,14 @@
 import {
   solve_q1,
-  solve_q10,
-  solve_q11,
-  solve_q12,
   solve_q2,
   solve_q3,
-  solve_q4,
   solve_q5,
   solve_q6,
   solve_q7,
-  solve_q8,
   solve_q9,
+  solve_q10,
+  solve_q11,
+  solve_q12,
 } from "@/lib/assignment5/solvers";
 import type { ParsedProblem } from "@/lib/types";
 
@@ -29,28 +27,20 @@ const solverSpecs: Record<string, SolverSpec> = {
     solve: (Q_coulomb, omega_rad_s) => solve_q3(Q_coulomb, omega_rad_s),
   },
   q4: {
-    requiredKeys: ["beam_MeV", "current_A"],
-    solve: (beam_MeV, current_A) => solve_q4(beam_MeV, current_A),
-  },
-  q5: {
     requiredKeys: ["R_initial_ohm", "length_factor"],
     solve: (R_initial_ohm, length_factor) => solve_q5(R_initial_ohm, length_factor),
   },
-  q6: {
+  q5: {
     requiredKeys: ["side_mm", "rho1_ohm_m", "L1_cm", "rho2_ohm_m", "L2_cm"],
     solve: (side_mm, rho1_ohm_m, L1_cm, rho2_ohm_m, L2_cm) =>
       solve_q6(side_mm, rho1_ohm_m, L1_cm, rho2_ohm_m, L2_cm),
   },
-  q7: {
+  q6: {
     requiredKeys: ["diameter_cm", "length_km", "current_A", "n_per_m3"],
     solve: (diameter_cm, length_km, current_A, n_per_m3) =>
       solve_q7(diameter_cm, length_km, current_A, n_per_m3),
   },
-  q8: {
-    requiredKeys: ["drift_speed_m_s", "mean_free_time_s"],
-    solve: (drift_speed_m_s, mean_free_time_s) => solve_q8(drift_speed_m_s, mean_free_time_s),
-  },
-  q9: {
+  q7: {
     requiredKeys: [
       "V_line_V",
       "length_m",
@@ -61,17 +51,17 @@ const solverSpecs: Record<string, SolverSpec> = {
     solve: (V_line_V, length_m, resistance_value_ohm, resistance_distance_m, load_current_A) =>
       solve_q9(V_line_V, length_m, resistance_value_ohm, resistance_distance_m, load_current_A),
   },
-  q10: {
+  q8: {
     requiredKeys: ["delta_current_A", "V_initial_V", "V_final_V"],
     solve: (delta_current_A, V_initial_V, V_final_V) =>
       solve_q10(delta_current_A, V_initial_V, V_final_V),
   },
-  q11: {
+  q9: {
     requiredKeys: ["surge_voltage_V", "bulb_voltage_V", "bulb_watt_W"],
     solve: (surge_voltage_V, bulb_voltage_V, bulb_watt_W) =>
       solve_q11(surge_voltage_V, bulb_voltage_V, bulb_watt_W),
   },
-  q12: {
+  q10: {
     requiredKeys: ["mass_g", "resistivity_ohm_m", "density_g_cm3", "total_resistance_ohm"],
     solve: (mass_g, resistivity_ohm_m, density_g_cm3, total_resistance_ohm) =>
       solve_q12(mass_g, resistivity_ohm_m, density_g_cm3, total_resistance_ohm),
@@ -89,8 +79,6 @@ const ORDERED_QUESTIONS = [
   "q8",
   "q9",
   "q10",
-  "q11",
-  "q12",
 ] as const;
 
 type QuestionKey = (typeof ORDERED_QUESTIONS)[number];
@@ -99,15 +87,13 @@ const questionSignatures: Record<QuestionKey, RegExp[]> = {
   q1: [/car battery/i, /a\s*hr/i],
   q2: [/electron beam/i, /picture tube/i],
   q3: [/small sphere/i, /whirled in a circle/i, /rotating charge/i],
-  q4: [/beam produced by the generator/i, /mev/i, /atoms are/i],
-  q5: [/resistance .* lengthened/i, /stretched/i, /pulled through a small hole/i],
-  q6: [/rod .* two materials/i, /square cross section/i, /L ?1/i, /L ?2/i],
-  q7: [/transmission line/i, /electrons\/m3/i, /free charge density/i],
-  q8: [/drift speed/i, /mean free time/i, /collisions/i],
-  q9: [/customer.?s house/i, /main power lines/i, /ohm per/i],
-  q10: [/current .* decreases/i, /potential difference/i, /final voltage/i],
-  q11: [/voltage surge/i, /lightbulb/i, /percentage/i],
-  q12: [/sample of a conducting material/i, /density/i, /cylindrical wire/i],
+  q4: [/resistance .* lengthened/i, /stretched/i, /pulled through a small hole/i],
+  q5: [/rod .* two materials/i, /square cross section/i, /L ?1/i, /L ?2/i],
+  q6: [/transmission line/i, /electrons\/m3/i, /free charge density/i],
+  q7: [/customer.?s house/i, /main power lines/i, /ohm per/i],
+  q8: [/current .* decreases/i, /potential difference/i, /final voltage/i],
+  q9: [/voltage surge/i, /lightbulb/i, /percentage/i],
+  q10: [/sample of a conducting material/i, /density/i, /cylindrical wire/i],
 };
 
 function normalizeUnit(unit: string | null): string {
@@ -272,7 +258,7 @@ function pickInputValue(
 export function runAssignment5Solver(question: string, inputs: Record<string, number>) {
   const spec = solverSpecs[question];
   if (!spec) {
-    return { ok: false, error: "Unknown question. Use q1..q12." };
+    return { ok: false, error: "Unknown question. Use q1..q10." };
   }
 
   const missing: string[] = [];

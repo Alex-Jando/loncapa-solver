@@ -10,32 +10,26 @@ export const a5OutputUnits = {
     current_A: "A"
   },
   q4: {
-    atom_spacing_m: "m"
-  },
-  q5: {
     R_new_ohm: "ohm"
   },
-  q6: {
+  q5: {
     R_total_ohm: "ohm"
   },
-  q7: {
+  q6: {
     travel_time_s: "s"
   },
-  q8: {
-    electric_field_N_C: "N/C"
-  },
-  q9: {
+  q7: {
     V_house_V: "V",
     P_customer_W: "W",
     P_line_loss_W: "W"
   },
-  q10: {
+  q8: {
     resistance_ohm: "ohm"
   },
-  q11: {
+  q9: {
     percent_increase: "%"
   },
-  q12: {
+  q10: {
     length_m: "m",
     diameter_m: "m"
   }
