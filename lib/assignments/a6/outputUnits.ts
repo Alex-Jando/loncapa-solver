@@ -8,19 +8,19 @@ export const a6OutputUnits = {
     r3_ohm: "ohm"
   },
   q3: {
-    r_prime_ohm: "ohm"
-  },
-  q4: {
-    i1_A: "A",
-    i3_A: "A",
-    e2_V: "V"
-  },
-  q5: {
     vab_V: "V",
     i_r8_A: "A"
   },
-  q6: {
+  q4: {
     p_r2_W: "W"
+  },
+  q5: {
+    r_prime_ohm: "ohm"
+  },
+  q6: {
+    i1_A: "A",
+    i3_A: "A",
+    e2_V: "V"
   },
   q7: {
     r1_ohm: "ohm",
