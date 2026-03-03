@@ -62,7 +62,10 @@ export function solve_q7(E_MeV: number, angle_deg: number, B: number): Record<st
   const M = 1.67e-27;
   const s = Math.sin((angle_deg * PI) / 180);
   const x = Math.sqrt(2 * E * M) / (B * E_CHARGE * s);
-  return { distance_m: x };
+  return {
+    distance_m: x,
+    exit_angle_deg: angle_deg,
+  };
 }
 
 export function solve_q8(torque: number, angle_deg: number, B: number): Record<string, number> {

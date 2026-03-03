@@ -11,7 +11,7 @@ export const a7OutputUnits = {
   },
   q3: {
     phi_deg: "deg",
-    torque_Nm: null
+    torque_Nm: "N*m"
   },
   q4: {
     r238_m: "m",
@@ -21,21 +21,18 @@ export const a7OutputUnits = {
     cyclotron_radius_m: "m"
   },
   q6: {
-    unknown_field_T: "T",
-    carrier_density_m3: "1/m^3"
+    distance_m: "m",
+    exit_angle_deg: "deg"
   },
   q7: {
-    distance_m: "m"
-  },
-  q8: {
     magnetic_dipole_Nm_per_T: "N*m/T"
   },
-  q9: {
+  q8: {
     V_N2plus_V: "V",
     V_O2plus_V: "V",
     V_COplus_V: "V"
   },
-  q10: {
+  q9: {
     required_field_T: "T"
   }
 } as const;
