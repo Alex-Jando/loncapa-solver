@@ -26,7 +26,7 @@ export const a8OutputUnits = {
     flux_annulus_Wb: "Wb"
   },
   q7: {
-    magnetic_moment_A_m2: "A/m^2"
+    magnetic_moment_A_m2: "A*m^2"
   },
   q8: {
     B_T: "T"

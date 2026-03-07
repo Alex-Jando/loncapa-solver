@@ -7,10 +7,16 @@ import { SelectedProblemCard } from "@/components/SelectedProblemCard";
 import { SolverPanel } from "@/components/SolverPanel";
 import { ToastViewport } from "@/components/ToastViewport";
 import { UploadCard } from "@/components/UploadCard";
-import type { SolveAllResponse, ToastItem, ToastKind } from "@/components/ui-types";
+import type {
+  SolveAllResponse,
+  ToastItem,
+  ToastKind,
+} from "@/components/ui-types";
 import type { ParseLonCapaResult } from "@/lib/types";
 
-function isAssignmentNumber(value: unknown): value is 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 {
+function isAssignmentNumber(
+  value: unknown,
+): value is 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 {
   return (
     value === 1 ||
     value === 2 ||
@@ -33,9 +39,14 @@ export default function HomePage() {
 
   const [solveAllLoading, setSolveAllLoading] = useState(false);
   const [solveAllError, setSolveAllError] = useState<string | null>(null);
-  const [solveAllResponse, setSolveAllResponse] = useState<SolveAllResponse | null>(null);
-  const [selectedAssignment, setSelectedAssignment] = useState<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10>(5);
-  const [selectedProblemId, setSelectedProblemId] = useState<string | null>(null);
+  const [solveAllResponse, setSolveAllResponse] =
+    useState<SolveAllResponse | null>(null);
+  const [selectedAssignment, setSelectedAssignment] = useState<
+    1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+  >(1);
+  const [selectedProblemId, setSelectedProblemId] = useState<string | null>(
+    null,
+  );
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
   const parseStatus: "idle" | "parsing" | "done" | "error" = parseLoading
@@ -50,9 +61,15 @@ export default function HomePage() {
     if (!result || !selectedProblemId) {
       return null;
     }
-    return result.problems.find((problem) => problem.problemId === selectedProblemId) ?? null;
+    return (
+      result.problems.find(
+        (problem) => problem.problemId === selectedProblemId,
+      ) ?? null
+    );
   }, [result, selectedProblemId]);
-  const parserDetectedAssignment = isAssignmentNumber(result?.assignmentMetadata.assignmentNumber)
+  const parserDetectedAssignment = isAssignmentNumber(
+    result?.assignmentMetadata.assignmentNumber,
+  )
     ? result.assignmentMetadata.assignmentNumber
     : null;
 
@@ -170,7 +187,8 @@ export default function HomePage() {
       setSolveAllResponse(payload as SolveAllResponse);
       pushToast("Solve completed.", "success");
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unexpected solve-all error.";
+      const message =
+        err instanceof Error ? err.message : "Unexpected solve-all error.";
       setSolveAllError(message);
       pushToast(message, "error");
     } finally {
@@ -182,7 +200,9 @@ export default function HomePage() {
     if (!solveAllResponse) {
       return;
     }
-    await navigator.clipboard.writeText(JSON.stringify(solveAllResponse, null, 2));
+    await navigator.clipboard.writeText(
+      JSON.stringify(solveAllResponse, null, 2),
+    );
     pushToast("Copied all formatted results.", "info");
   }
 
@@ -190,7 +210,9 @@ export default function HomePage() {
     if (!solveAllResponse) {
       return;
     }
-    const blob = new Blob([JSON.stringify(solveAllResponse, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(solveAllResponse, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -265,4 +287,3 @@ export default function HomePage() {
     </>
   );
 }
-
