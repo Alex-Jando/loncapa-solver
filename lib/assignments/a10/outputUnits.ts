@@ -11,7 +11,7 @@ export const a10OutputUnits = {
   },
   q3: {
     amplitude_m: "m",
-    phase_constant_rad: null,
+    phase_constant_rad: "rad",
     max_transverse_speed_m_s: "m/s",
   },
   q4: {
